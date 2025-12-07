@@ -1,9 +1,9 @@
-# main.py
-
 import tkinter as tk
 from tkinter import ttk
 import config
 from components.ticker import CryptoTicker
+from components.orderbook import OrderBookPanel
+from components.candles import CandlestickPanel
 
 
 class CryptoDashboard:
@@ -22,33 +22,64 @@ class CryptoDashboard:
 
         # Ticker display area
         self.ticker_frame = ttk.Frame(main_frame)
-        self.ticker_frame.pack(fill=tk.X, expand=True)
+        self.ticker_frame.pack(fill=tk.X, pady=10)
+
+        # Lower container using GRID
+        self.lower_frame = ttk.Frame(main_frame)
+        self.lower_frame.pack(fill=tk.BOTH, expand=True, pady=10)
+
+        # Make grid columns always 50/50
+        self.lower_frame.columnconfigure(0, weight=1, uniform="half")
+        self.lower_frame.columnconfigure(1, weight=1, uniform="half")
+
+        # Create panels
+        self.orderbook = OrderBookPanel(self.lower_frame, symbol="btcusdt")
+        self.candles = CandlestickPanel(self.lower_frame, symbol="btcusdt")
+
+        # Place in grid (default both visible)
+        self.orderbook.frame.grid(row=0, column=0, sticky="nsew", padx=10)
+        self.candles.frame.grid(row=0, column=1, sticky="nsew", padx=10)
+
+        self.ob_visible = True
+        self.candles_visible = True
 
         # --- Create tickers ---
         self.btc = CryptoTicker(self.ticker_frame, "btcusdt", "BTC/USDT")
         self.eth = CryptoTicker(self.ticker_frame, "ethusdt", "ETH/USDT")
         self.sol = CryptoTicker(self.ticker_frame, "solusdt", "SOL/USDT")
 
-        # BTC always visible
         self.btc.pack(side=tk.LEFT, padx=10, fill=tk.BOTH, expand=True)
         self.btc.start()
 
-        # ETH/SOL toggles
-        self.eth_visible = False
-        self.sol_visible = False
+        self.eth.pack(side=tk.LEFT, padx=10, fill=tk.BOTH, expand=True)
+        self.eth.start()
 
+        self.sol.pack(side=tk.LEFT, padx=10, fill=tk.BOTH, expand=True)
+        self.sol.start()
+
+        # Toggle states
+        self.eth_visible = True
+        self.sol_visible = True
+
+        # Toggle buttons
         ttk.Button(control_frame, text="Toggle ETH/USDT",
                    command=self.toggle_eth).pack(side=tk.LEFT, padx=10)
 
         ttk.Button(control_frame, text="Toggle SOL/USDT",
                    command=self.toggle_sol).pack(side=tk.LEFT, padx=10)
 
-        # Handle window close
+        ttk.Button(control_frame, text="Toggle Orderbook",
+                   command=self.toggle_orderbook).pack(side=tk.LEFT, padx=10)
+
+        ttk.Button(control_frame, text="Toggle Candles",
+                   command=self.toggle_candles).pack(side=tk.LEFT, padx=10)
+
+        # Shutdown handling
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    # ------------------------
-    # Toggle handlers
-    # ------------------------
+    # ----------------
+    # TICKERS
+    # ----------------
     def toggle_eth(self):
         if self.eth_visible:
             self.eth.stop()
@@ -69,9 +100,24 @@ class CryptoDashboard:
             self.sol.start()
             self.sol_visible = True
 
-    # ------------------------
+    # ----------------
+    # LOWER PANEL TOGGLES (now with GRID)
+    # ----------------
+    def toggle_orderbook(self):
+        if self.ob_visible:
+            self.orderbook.frame.grid_remove()
+        else:
+            self.orderbook.frame.grid(row=0, column=0, sticky="nsew", padx=10)
+        self.ob_visible = not self.ob_visible
+
+    def toggle_candles(self):
+        if self.candles_visible:
+            self.candles.frame.grid_remove()
+        else:
+            self.candles.frame.grid(row=0, column=1, sticky="nsew", padx=10)
+        self.candles_visible = not self.candles_visible
+
     # Shutdown handling
-    # ------------------------
     def on_closing(self):
         self.btc.stop()
         self.eth.stop()

@@ -1,5 +1,5 @@
 WINDOW_TITLE = "Crypto Dashboard"
-WINDOW_SIZE = "1000x400"
+WINDOW_SIZE = "1200x750"
 
 CRYPTO_SYMBOLS = {
     "BTC/USDT": "btcusdt",
