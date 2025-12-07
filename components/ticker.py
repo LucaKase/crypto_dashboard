@@ -15,25 +15,20 @@ class CryptoTicker:
         self.is_active = False
         self.ws = None
 
-        # Create UI frame
         self.frame = ttk.Frame(parent, relief="solid",
                                borderwidth=1, padding=20)
 
-        # Title
         ttk.Label(self.frame, text=self.display_name,
                   font=("Arial", 16, "bold")).pack()
 
-        # Price
         self.price_label = tk.Label(self.frame, text="--",
                                     font=("Arial", 40, "bold"))
         self.price_label.pack(pady=10)
 
-        # Change %
         self.change_label = ttk.Label(
             self.frame, text="--", font=("Arial", 12))
         self.change_label.pack()
 
-    # WebSocket management
     def start(self):
         if self.is_active:
             return
@@ -57,7 +52,6 @@ class CryptoTicker:
             self.ws.close()
             self.ws = None
 
-    # WebSocket events
     def on_message(self, ws, message):
         if not self.is_active:
             return
@@ -86,7 +80,6 @@ class CryptoTicker:
             foreground=color
         )
 
-    # Layout helpers
     def pack(self, **kwargs):
         self.frame.pack(**kwargs)
 
