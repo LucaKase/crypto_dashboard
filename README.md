@@ -2,8 +2,7 @@
 
 ## Overview
 
-This project is a **real-time cryptocurrency dashboard** implemented in Python using **Tkinter** for the graphical user interface.  
-It visualizes live and near real-time market data from the **Binance API**, combining WebSocket streams and REST endpoints.
+This project is a **real-time cryptocurrency dashboard** implemented in Python using **Tkinter** for the graphical user interface. It visualizes live and near real-time market data from the **Binance API**, combining WebSocket streams and REST endpoints.
 
 The application displays:
 
@@ -53,6 +52,7 @@ The project follows **object-oriented design principles** and clean separation o
 
 ## Project Structure
 
+```text
 crypto_dashboard/
 ├── main.py # Entry point
 ├── components/
@@ -65,6 +65,7 @@ crypto_dashboard/
 │ └── binance_api.py # Binance REST API helper functions
 ├── config.py # Global configuration
 └── requirements.txt # Project dependencies
+```
 
 ---
 
